@@ -94,6 +94,39 @@ class Automata():
         if tar != 0:
             self.select_servant(tar)
 
+    def select_servant_skill2(self, servant: int, skill: int, target: int = 0):
+        """ Select Servant Skill 2
+        Parameters
+        ----------
+            servant: int
+        The id of the servant. 1~3 counted from left.
+
+            skill: int
+        The id of the skill of the selected servant. 1~3 counted from left.
+
+            target: int
+        The id of target servant. 1~3 counted from left.
+        (If the skill has target servant)
+        """
+        self.select_servant_skill((servant-1)*3+skill, target)
+
+    def select_servant_skillM(self, skills: [(int, int)]):
+        """ Select Multiple Servant Skill 
+        Parameters
+        ----------
+            skills: list
+        A list of a tuple of id of the skill and target servant.
+
+        Examples
+        --------
+        Here are examples::
+
+            select_servant_skillM([(1,0)]) # skill 1 w/o target servants
+            select_servant_skill([(2,0), (4,1)]) # skill 2 w/o target and skill 4 w/ target servant 1
+        """
+        for skill in skills:
+            self.select_servant_skill(skill[0], skill[1])
+
     def select_servant(self, servant: int):
         """ Select Servant
         Parameters
@@ -155,7 +188,7 @@ class Automata():
         self.tap(crds.MASTER_SKILLS[skill-1], 8, 8)
         if org != 0 and tar == 0:
             self.select_servant(org)
-        elif org != 0 and tar != 0:
+        elif org != 0:
             self.change_servant(org, tar)
 
     # pre-battle related
@@ -174,7 +207,7 @@ class Automata():
         self.wait(self.checkpoint)
         if ckp is None:
             ckp = self.checkpoint
-        crds = util.get_crd(util.get_sh(self.shifts), self.checkpoint)
+        crds = util.get_crd(util.get_sh(self.shifts), ckp)
         self.tap(crds[0], 100)
         time.sleep(0.2)
         # check whether out of AP
